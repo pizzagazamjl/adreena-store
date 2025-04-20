@@ -31,6 +31,13 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
 
       <div className="receipt-container border border-gray-200 rounded-md p-4" id="receipt">
         <div className="receipt-header text-center mb-4">
+          <div className="mb-3">
+            <img 
+              src="/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png" 
+              alt="Adreena Store Logo"
+              className="h-12 mx-auto"
+            />
+          </div>
           <div className="text-lg font-bold mb-1">{storeProfile.storeName}</div>
           {storeProfile.storeAddress && (
             <div className="text-sm mb-1">{storeProfile.storeAddress}</div>
