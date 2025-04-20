@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Edit, Trash, Download, Share } from "lucide-react";
 import { toast } from "sonner";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const TransactionDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -28,6 +30,7 @@ const TransactionDetailPage: React.FC = () => {
   const { storeProfile } = useStore();
   const receiptRef = useRef<HTMLDivElement>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   
   const transaction = getTransaction(id || "");
   
@@ -80,9 +83,72 @@ const TransactionDetailPage: React.FC = () => {
     printWindow.close();
   };
 
-  const handleDownloadPDF = () => {
-    // This is a placeholder - in a real app, you would use a library like jsPDF
-    toast.info("Fitur download PDF akan tersedia segera.");
+  const handleDownloadPDF = async () => {
+    if (!receiptRef.current) {
+      toast.error("Tidak dapat menemukan nota untuk diunduh");
+      return;
+    }
+
+    try {
+      setIsGeneratingPDF(true);
+      toast.info("Sedang membuat PDF, mohon tunggu...");
+
+      // Create a clone of the receipt to adjust styles for PDF
+      const receiptElement = receiptRef.current.querySelector('.receipt-container');
+      if (!receiptElement) {
+        throw new Error("Element nota tidak ditemukan");
+      }
+
+      const receiptClone = receiptElement.cloneNode(true) as HTMLElement;
+      
+      // Set specific styles for the clone to ensure good PDF rendering
+      receiptClone.style.width = '210mm'; // A4 width
+      receiptClone.style.padding = '10mm';
+      receiptClone.style.backgroundColor = 'white';
+      receiptClone.style.color = 'black';
+      receiptClone.style.fontFamily = 'Arial, sans-serif';
+      
+      // Append clone to body temporarily but hide it
+      const tempDiv = document.createElement('div');
+      tempDiv.style.position = 'absolute';
+      tempDiv.style.left = '-9999px';
+      tempDiv.appendChild(receiptClone);
+      document.body.appendChild(tempDiv);
+
+      // Generate canvas from the clone
+      const canvas = await html2canvas(receiptClone, {
+        scale: 2, // Higher scale for better quality
+        logging: false,
+        backgroundColor: 'white',
+      });
+
+      // Remove the temporary element
+      document.body.removeChild(tempDiv);
+
+      // Create PDF
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+
+      // Calculate dimensions to fit the receipt properly
+      const imgWidth = 190; // slightly less than A4 width
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      // Add image to PDF
+      const imgData = canvas.toDataURL('image/png');
+      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+
+      // Save the PDF
+      pdf.save(`Nota_${transaction.id}.pdf`);
+      toast.success("PDF berhasil diunduh");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast.error("Gagal membuat PDF. Silakan coba lagi.");
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   const handleShareWhatsApp = () => {
@@ -146,8 +212,10 @@ const TransactionDetailPage: React.FC = () => {
         <Button
           variant="outline"
           onClick={handleDownloadPDF}
+          disabled={isGeneratingPDF}
         >
-          <Download className="h-4 w-4 mr-2" /> PDF
+          <Download className="h-4 w-4 mr-2" /> 
+          {isGeneratingPDF ? "Sedang Memproses..." : "PDF"}
         </Button>
         
         <Button

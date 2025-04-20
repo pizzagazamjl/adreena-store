@@ -29,8 +29,8 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
         </Button>
       </div>
 
-      <div className="receipt-container border border-gray-200 rounded-md" id="receipt">
-        <div className="receipt-header">
+      <div className="receipt-container border border-gray-200 rounded-md p-4" id="receipt">
+        <div className="receipt-header text-center mb-4">
           <div className="text-lg font-bold mb-1">{storeProfile.storeName}</div>
           {storeProfile.storeAddress && (
             <div className="text-sm mb-1">{storeProfile.storeAddress}</div>
@@ -57,7 +57,7 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
           )}
         </div>
 
-        <div className="receipt-divider"></div>
+        <div className="receipt-divider border-t border-dashed my-2"></div>
 
         <div className="mb-2">
           {transaction.items.map((item, index) => (
@@ -73,7 +73,7 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
           ))}
         </div>
 
-        <div className="receipt-divider"></div>
+        <div className="receipt-divider border-t border-dashed my-2"></div>
 
         <div className="receipt-total">
           <div className="flex justify-between text-sm font-bold">
@@ -88,8 +88,8 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
           </div>
         )}
 
-        <div className="receipt-footer">
-          <div className="text-sm">{storeProfile.storeFooter}</div>
+        <div className="receipt-footer text-center mt-4 text-xs">
+          <div>{storeProfile.storeFooter}</div>
         </div>
       </div>
     </div>
