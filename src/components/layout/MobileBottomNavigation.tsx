@@ -36,14 +36,16 @@ const MobileBottomNavigation = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg md:hidden">
-      <div className="flex justify-around items-center h-16">
+      <div className="flex justify-around items-center h-16 bg-adreena-500 text-white">
         {navItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
             className={cn(
-              "flex flex-col items-center justify-center w-full h-full",
-              item.active ? "text-adreena-600" : "text-gray-500 hover:text-adreena-500"
+              "flex flex-col items-center justify-center w-full h-full transition-colors",
+              item.active 
+                ? "text-white" 
+                : "text-white/70 hover:text-white"
             )}
           >
             <item.icon className="h-5 w-5 mb-1" />

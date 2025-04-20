@@ -16,14 +16,16 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   className = ""
 }) => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-adreena-50 to-adreena-100">
       <Header title={title} />
       
       <main className={cn(
-        "flex-1 container mx-auto px-4 py-4 mb-16 md:mb-0",
+        "flex-1 container mx-auto px-4 py-6 mb-16 md:mb-6",
         className
       )}>
-        {children}
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          {children}
+        </div>
       </main>
       
       <MobileBottomNavigation />
