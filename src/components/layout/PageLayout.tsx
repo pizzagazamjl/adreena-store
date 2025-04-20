@@ -2,6 +2,7 @@
 import React from "react";
 import Header from "./Header";
 import MobileBottomNavigation from "./MobileBottomNavigation";
+import { cn } from "@/lib/utils";
 
 interface PageLayoutProps {
   children: React.ReactNode;

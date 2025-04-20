@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -88,19 +87,20 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
       }
     }
 
+    // Ensure date is always defined (required by the Transaction type)
+    const transactionData = {
+      ...data,
+      date: data.date,  // This ensures date is not undefined
+      items,
+    };
+
     if (isEditMode && defaultValues?.id) {
       // Update existing transaction
-      updateTransaction(defaultValues.id, {
-        ...data,
-        items,
-      });
+      updateTransaction(defaultValues.id, transactionData);
       navigate(`/transactions/${defaultValues.id}`);
     } else {
       // Add new transaction
-      const newTransactionId = addTransaction({
-        ...data,
-        items,
-      });
+      const newTransactionId = addTransaction(transactionData);
       navigate(`/transactions/${newTransactionId}`);
     }
   };
