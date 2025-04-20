@@ -38,10 +38,16 @@ export const TransactionProvider: React.FC<{ children: React.ReactNode }> = ({
         if (error) throw error;
 
         const formattedTransactions: Transaction[] = data.map(t => ({
-          ...t,
+          id: t.id,
+          customerName: t.customer_name,
           date: new Date(t.date),
+          totalAmount: Number(t.total_amount),
+          totalCostPrice: Number(t.total_cost_price),
+          profit: Number(t.profit),
+          note: t.note,
           items: t.items.map((item: any) => ({
-            ...item,
+            id: item.id,
+            name: item.name,
             price: Number(item.price),
             costPrice: Number(item.cost_price),
             quantity: Number(item.quantity)
@@ -129,7 +135,12 @@ export const TransactionProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const updateTransaction = async (id: string, transactionData: Partial<Transaction>) => {
-    let updateData: any = { ...transactionData };
+    let updateData: any = {};
+    
+    // Map camelCase to snake_case for database columns
+    if (transactionData.customerName !== undefined) updateData.customer_name = transactionData.customerName;
+    if (transactionData.note !== undefined) updateData.note = transactionData.note;
+    if (transactionData.date) updateData.date = transactionData.date.toISOString();
     
     // If items are being updated, recalculate totals
     if (transactionData.items) {
@@ -173,29 +184,40 @@ export const TransactionProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     // Update the transaction
-    const { error } = await supabase
-      .from('transactions')
-      .update({
-        customer_name: updateData.customerName,
-        date: updateData.date?.toISOString(),
-        total_amount: updateData.total_amount,
-        total_cost_price: updateData.total_cost_price,
-        profit: updateData.profit,
-        note: updateData.note,
-        status: updateData.status
-      })
-      .eq('id', id);
+    if (Object.keys(updateData).length > 0) {
+      const { error } = await supabase
+        .from('transactions')
+        .update(updateData)
+        .eq('id', id);
 
-    if (error) {
-      console.error('Error updating transaction:', error);
-      toast.error("Gagal memperbarui transaksi");
-      throw error;
+      if (error) {
+        console.error('Error updating transaction:', error);
+        toast.error("Gagal memperbarui transaksi");
+        throw error;
+      }
     }
 
+    // Update local state
     setTransactions(prev => 
       prev.map(t => {
         if (t.id !== id) return t;
-        return { ...t, ...transactionData };
+        
+        // Create updated transaction with correct property names
+        const updatedTransaction: Transaction = { ...t };
+        
+        if (transactionData.customerName !== undefined) updatedTransaction.customerName = transactionData.customerName;
+        if (transactionData.note !== undefined) updatedTransaction.note = transactionData.note;
+        if (transactionData.date) updatedTransaction.date = transactionData.date;
+        
+        if (transactionData.items) {
+          updatedTransaction.items = [...transactionData.items];
+          const { totalAmount, totalCostPrice, profit } = calculateTransactionTotals(transactionData.items);
+          updatedTransaction.totalAmount = totalAmount;
+          updatedTransaction.totalCostPrice = totalCostPrice;
+          updatedTransaction.profit = profit;
+        }
+        
+        return updatedTransaction;
       })
     );
     
