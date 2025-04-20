@@ -9,7 +9,122 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      store_profiles: {
+        Row: {
+          created_at: string | null
+          id: string
+          store_address: string | null
+          store_footer: string | null
+          store_logo: string | null
+          store_name: string
+          store_phone: string | null
+          store_whatsapp: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          store_address?: string | null
+          store_footer?: string | null
+          store_logo?: string | null
+          store_name: string
+          store_phone?: string | null
+          store_whatsapp?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          store_address?: string | null
+          store_footer?: string | null
+          store_logo?: string | null
+          store_name?: string
+          store_phone?: string | null
+          store_whatsapp?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      transaction_items: {
+        Row: {
+          cost_price: number
+          created_at: string | null
+          id: string
+          name: string
+          price: number
+          quantity: number
+          transaction_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          cost_price: number
+          created_at?: string | null
+          id?: string
+          name: string
+          price: number
+          quantity: number
+          transaction_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          cost_price?: number
+          created_at?: string | null
+          id?: string
+          name?: string
+          price?: number
+          quantity?: number
+          transaction_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_items_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transactions: {
+        Row: {
+          created_at: string | null
+          customer_name: string | null
+          date: string
+          id: string
+          note: string | null
+          profit: number
+          status: Database["public"]["Enums"]["transaction_status"] | null
+          total_amount: number
+          total_cost_price: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          customer_name?: string | null
+          date?: string
+          id: string
+          note?: string | null
+          profit?: number
+          status?: Database["public"]["Enums"]["transaction_status"] | null
+          total_amount?: number
+          total_cost_price?: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          customer_name?: string | null
+          date?: string
+          id?: string
+          note?: string | null
+          profit?: number
+          status?: Database["public"]["Enums"]["transaction_status"] | null
+          total_amount?: number
+          total_cost_price?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +133,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      transaction_status: "completed" | "cancelled" | "void"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +248,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      transaction_status: ["completed", "cancelled", "void"],
+    },
   },
 } as const
