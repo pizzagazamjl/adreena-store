@@ -10,9 +10,9 @@ interface StoreContextType {
 
 const defaultStoreProfile: StoreProfile = {
   storeName: "Adreena Store",
-  storeAddress: "Jl. Example No. 123, Jakarta",
-  storePhone: "081234567890",
-  storeWhatsapp: "081234567890",
+  storeAddress: "Jl. Pemuda No.34, Majalengka",
+  storePhone: "085351881666",
+  storeWhatsapp: "085351881666",
   storeFooter: "Terima kasih telah berbelanja di Adreena Store",
 };
 
