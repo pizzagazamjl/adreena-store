@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
@@ -101,7 +102,7 @@ const TransactionDetailPage: React.FC = () => {
       const receiptClone = receiptElement.cloneNode(true) as HTMLElement;
 
       // Append the image at footer's right side
-      const footerDiv = receiptClone.querySelector('.receipt-footer');
+      const footerDiv = receiptClone.querySelector('.receipt-footer') as HTMLElement;
       if (footerDiv) {
         // Create image element
         const img = document.createElement('img');
