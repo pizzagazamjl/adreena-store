@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
@@ -100,14 +99,33 @@ const TransactionDetailPage: React.FC = () => {
       }
 
       const receiptClone = receiptElement.cloneNode(true) as HTMLElement;
-      
+
+      // Append the image at footer's right side
+      const footerDiv = receiptClone.querySelector('.receipt-footer');
+      if (footerDiv) {
+        // Create image element
+        const img = document.createElement('img');
+        img.src = '/lovable-uploads/d92af38d-c7a4-482e-9633-55a279c0b29c.png';
+        img.style.height = '30px';
+        img.style.objectFit = 'contain';
+        img.style.marginLeft = '8px';
+
+        // Set footerDiv style to flex row, align center and justify center with space for image
+        footerDiv.style.display = 'flex';
+        footerDiv.style.justifyContent = 'center';
+        footerDiv.style.alignItems = 'center';
+
+        // Insert the image after footer text
+        footerDiv.appendChild(img);
+      }
+
       // Set specific styles for the clone to ensure good PDF rendering
       receiptClone.style.width = '210mm'; // A4 width
       receiptClone.style.padding = '10mm';
       receiptClone.style.backgroundColor = 'white';
       receiptClone.style.color = 'black';
       receiptClone.style.fontFamily = 'Arial, sans-serif';
-      
+
       // Append clone to body temporarily but hide it
       const tempDiv = document.createElement('div');
       tempDiv.style.position = 'absolute';
@@ -135,7 +153,7 @@ const TransactionDetailPage: React.FC = () => {
       // Calculate dimensions to fit the receipt properly
       const imgWidth = 190; // slightly less than A4 width
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
+
       // Add image to PDF
       const imgData = canvas.toDataURL('image/png');
       pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
