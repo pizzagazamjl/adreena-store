@@ -1,70 +1,77 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 220 10% 10%; /* abu-abu gelap */
-    --foreground: 24 100% 50%; /* orange utama untuk teks/ikon */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-    --card: 220 11% 16%; /* abu gelap sedikit lebih terang untuk card */
-    --card-foreground: 24 100% 50%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 220 11% 18%;
-    --popover-foreground: 24 100% 50%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 24 100% 50%; /* orange */
-    --primary-foreground: 220 11% 16%;
+    --primary: 240 81% 65%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 9% 21%; /* abu-abu gelap, lebih terang sedikit */
-    --secondary-foreground: 24 100% 50%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
 
-    --muted: 220 8% 28%; /* abu-abu muted */
-    --muted-foreground: 24 80% 80%; /* orange muted */
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 24 90% 60%;
-    --accent-foreground: 220 11% 16%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
 
-    --destructive: 12 90% 50%; /* orange kemerahan */
-    --destructive-foreground: 220 11% 16%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 220 9% 27%;
-    --input: 220 7% 24%;
-    --ring: 24 97% 56%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 81% 65%;
 
     --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    /* Sama saja, tetap pada skema abu-abu gelap dan orange */
-    --background: 220 10% 8%;
-    --foreground: 24 100% 60%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
 
-    --card: 220 11% 13%;
-    --card-foreground: 24 100% 60%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 220 11% 18%;
-    --popover-foreground: 24 100% 60%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 24 100% 62%;
-    --primary-foreground: 220 10% 10%;
+    --primary: 240 81% 65%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 9% 21%;
-    --secondary-foreground: 24 100% 70%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 220 8% 22%;
-    --muted-foreground: 24 80% 80%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
 
-    --accent: 24 100% 60%;
-    --accent-foreground: 220 11% 16%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 12 90% 50%;
-    --destructive-foreground: 220 11% 16%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 220 9% 20%;
-    --input: 220 8% 17%;
-    --ring: 24 97% 56%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 81% 65%;
   }
 }
 
@@ -78,21 +85,21 @@
   }
 
   .card {
-    @apply bg-card rounded-xl shadow-lg p-6 transition-all hover:shadow-xl;
+    @apply bg-white rounded-xl shadow-lg p-6 transition-all hover:shadow-xl;
   }
 
   .button-primary {
-    @apply bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-accent transition-colors;
+    @apply bg-adreena-500 text-white px-4 py-2 rounded-lg hover:bg-adreena-600 transition-colors;
   }
 
   .input-field {
-    @apply bg-background border border-input rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent transition-all text-foreground;
+    @apply bg-white border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-adreena-500 focus:border-transparent transition-all;
   }
 }
 
 @layer utilities {
   .receipt-container {
-    width: 76mm;
+    width: 76mm; /* Typical receipt width for thermal printers */
     font-family: 'Courier New', Courier, monospace;
     padding: 5mm;
     margin: 0 auto;
