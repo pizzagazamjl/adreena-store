@@ -31,7 +31,7 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
 
       <div className="receipt-container border border-gray-200 rounded-md p-4" id="receipt">
         <div className="receipt-header text-center mb-4">
-          {/* Logo di bagian atas dihapus sesuai permintaan */}
+          {/* Logo atas dihapus sesuai permintaan */}
           <div className="text-lg font-bold mb-1">{storeProfile.storeName}</div>
           {storeProfile.storeAddress && (
             <div className="text-sm mb-1">{storeProfile.storeAddress}</div>
@@ -83,11 +83,20 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
           </div>
         )}
         <div className="receipt-footer text-xs mt-4 flex items-center justify-between">
-          <div>{storeProfile.storeFooter}</div>
+          <div style={{ maxWidth: "60%", wordBreak: "break-word" }}>
+            {storeProfile.storeFooter}
+          </div>
           <img
-            src="/lovable-uploads/9126c7b3-d488-4b39-ac60-e8f5ce878cec.png"
+            src="/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png"
             alt="Adreena Store"
-            style={{ height: 36, width: "auto", marginLeft: 8, objectFit: "contain" }}
+            style={{
+              height: 108, // 3x dari sebelumnya 36
+              width: "auto",
+              marginLeft: 20, // geser agak ke kiri dari tepi kanan
+              objectFit: "contain",
+              display: "block",
+              maxWidth: 120, // agar tetap proporsional di footer
+            }}
             className="inline-block align-middle"
           />
         </div>
