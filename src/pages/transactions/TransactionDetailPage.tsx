@@ -66,7 +66,7 @@ const TransactionDetailPage: React.FC = () => {
             .receipt-header { text-align: center; margin-bottom: 10px; }
             .receipt-divider { border-top: 1px dashed #000; margin: 8px 0; }
             .receipt-total { font-weight: bold; margin-top: 8px; }
-            .receipt-footer { text-align: center; margin-top: 15px; font-size: 10px; }
+            .receipt-footer { text-align: center; margin-top: 15px; font-size: 10px; display: flex; justify-content: space-between; align-items: center; }
             .flex { display: flex; justify-content: space-between; }
           </style>
         </head>
@@ -107,12 +107,13 @@ const TransactionDetailPage: React.FC = () => {
         Array.from(footerDiv.getElementsByTagName("img")).forEach(img => img.remove());
         // Tambahkan gambar baru dengan ukuran proporsional dan penempatan kanan
         const img = document.createElement('img');
-        img.src = '/lovable-uploads/9126c7b3-d488-4b39-ac60-e8f5ce878cec.png';
+        img.src = '/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png';
         img.alt = "Adreena Store";
-        img.style.height = "36px";
+        // Perbesar 3x ukuran awal yg sebelumnya 36px, jadi 108px
+        img.style.height = "108px";
         img.style.width = "auto";
         img.style.objectFit = "contain";
-        img.style.marginLeft = "8px";
+        img.style.marginLeft = "20px";
         footerDiv.style.display = 'flex';
         footerDiv.style.justifyContent = 'space-between';
         footerDiv.style.alignItems = 'center';
