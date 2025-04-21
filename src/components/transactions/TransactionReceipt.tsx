@@ -31,13 +31,7 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
 
       <div className="receipt-container border border-gray-200 rounded-md p-4" id="receipt">
         <div className="receipt-header text-center mb-4">
-          <div className="mb-3">
-            <img 
-              src="/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png" 
-              alt="Adreena Store Logo"
-              className="h-12 mx-auto"
-            />
-          </div>
+          {/* Logo di bagian atas dihapus sesuai permintaan */}
           <div className="text-lg font-bold mb-1">{storeProfile.storeName}</div>
           {storeProfile.storeAddress && (
             <div className="text-sm mb-1">{storeProfile.storeAddress}</div>
@@ -46,7 +40,6 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
             <div className="text-sm">{storeProfile.storePhone}</div>
           )}
         </div>
-
         <div className="text-sm mb-2">
           <div className="flex justify-between">
             <span>No: {transaction.id}</span>
@@ -63,9 +56,7 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
             </div>
           )}
         </div>
-
         <div className="receipt-divider border-t border-dashed my-2"></div>
-
         <div className="mb-2">
           {transaction.items.map((item, index) => (
             <div key={index} className="text-sm mb-1">
@@ -79,24 +70,26 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
             </div>
           ))}
         </div>
-
         <div className="receipt-divider border-t border-dashed my-2"></div>
-
         <div className="receipt-total">
           <div className="flex justify-between text-sm font-bold">
             <span>Total:</span>
             <span>{formatCurrency(transaction.totalAmount)}</span>
           </div>
         </div>
-
         {transaction.note && (
           <div className="mt-3 text-sm">
             <span>Catatan: {transaction.note}</span>
           </div>
         )}
-
-        <div className="receipt-footer text-center mt-4 text-xs">
+        <div className="receipt-footer text-xs mt-4 flex items-center justify-between">
           <div>{storeProfile.storeFooter}</div>
+          <img
+            src="/lovable-uploads/9126c7b3-d488-4b39-ac60-e8f5ce878cec.png"
+            alt="Adreena Store"
+            style={{ height: 36, width: "auto", marginLeft: 8, objectFit: "contain" }}
+            className="inline-block align-middle"
+          />
         </div>
       </div>
     </div>

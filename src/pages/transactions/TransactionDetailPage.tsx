@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
@@ -101,26 +100,25 @@ const TransactionDetailPage: React.FC = () => {
 
       const receiptClone = receiptElement.cloneNode(true) as HTMLElement;
 
-      // Append the image at footer's right side
+      // Gambar di footer (kanan bawah nota):
       const footerDiv = receiptClone.querySelector('.receipt-footer') as HTMLElement;
       if (footerDiv) {
-        // Create image element
+        // Hapus semua <img> lama jika ada (antisipasi re-download)
+        Array.from(footerDiv.getElementsByTagName("img")).forEach(img => img.remove());
+        // Tambahkan gambar baru dengan ukuran proporsional dan penempatan kanan
         const img = document.createElement('img');
-        img.src = '/lovable-uploads/d92af38d-c7a4-482e-9633-55a279c0b29c.png';
-        img.style.height = '30px';
-        img.style.objectFit = 'contain';
-        img.style.marginLeft = '8px';
-
-        // Set footerDiv style to flex row, align center and justify center with space for image
+        img.src = '/lovable-uploads/9126c7b3-d488-4b39-ac60-e8f5ce878cec.png';
+        img.alt = "Adreena Store";
+        img.style.height = "36px";
+        img.style.width = "auto";
+        img.style.objectFit = "contain";
+        img.style.marginLeft = "8px";
         footerDiv.style.display = 'flex';
-        footerDiv.style.justifyContent = 'center';
+        footerDiv.style.justifyContent = 'space-between';
         footerDiv.style.alignItems = 'center';
-
-        // Insert the image after footer text
         footerDiv.appendChild(img);
       }
 
-      // Set specific styles for the clone to ensure good PDF rendering
       receiptClone.style.width = '210mm'; // A4 width
       receiptClone.style.padding = '10mm';
       receiptClone.style.backgroundColor = 'white';
