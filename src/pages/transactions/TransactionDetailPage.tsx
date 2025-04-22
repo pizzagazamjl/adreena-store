@@ -92,82 +92,85 @@ const TransactionDetailPage: React.FC = () => {
       setIsGeneratingPDF(true);
       toast.info("Sedang membuat PDF, mohon tunggu...");
 
-      // Create a clone of the receipt to adjust styles for PDF
-      const receiptElement = receiptRef.current.querySelector('.receipt-container');
-      if (!receiptElement) {
-        throw new Error("Element nota tidak ditemukan");
-      }
-
-      const receiptClone = receiptElement.cloneNode(true) as HTMLElement;
-
-      // Gambar di footer (kanan bawah nota):
-      const footerDiv = receiptClone.querySelector('.receipt-footer') as HTMLElement;
-      if (footerDiv) {
-        // Hapus semua <img> lama jika ada (antisipasi re-download)
-        Array.from(footerDiv.getElementsByTagName("img")).forEach(img => img.remove());
-        // Tambahkan gambar baru dengan ukuran proporsional dan penempatan kanan
-        const img = document.createElement('img');
-        img.src = '/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png';
-        img.alt = "Adreena Store";
-        // Perbesar 3x ukuran awal yg sebelumnya 36px, jadi 108px
-        img.style.height = "108px";
-        img.style.width = "auto";
-        img.style.objectFit = "contain";
-        img.style.marginLeft = "20px";
-        footerDiv.style.display = 'flex';
-        footerDiv.style.justifyContent = 'space-between';
-        footerDiv.style.alignItems = 'center';
-        footerDiv.appendChild(img);
-      }
-
-      receiptClone.style.width = '210mm'; // A4 width
-      receiptClone.style.padding = '10mm';
-      receiptClone.style.backgroundColor = 'white';
-      receiptClone.style.color = 'black';
-      receiptClone.style.fontFamily = 'Arial, sans-serif';
-
-      // Append clone to body temporarily but hide it
-      const tempDiv = document.createElement('div');
-      tempDiv.style.position = 'absolute';
-      tempDiv.style.left = '-9999px';
-      tempDiv.appendChild(receiptClone);
-      document.body.appendChild(tempDiv);
-
-      // Generate canvas from the clone
-      const canvas = await html2canvas(receiptClone, {
-        scale: 2, // Higher scale for better quality
-        logging: false,
-        backgroundColor: 'white',
-      });
-
-      // Remove the temporary element
-      document.body.removeChild(tempDiv);
-
-      // Create PDF
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-      });
-
-      // Calculate dimensions to fit the receipt properly
-      const imgWidth = 190; // slightly less than A4 width
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      // Add image to PDF
-      const imgData = canvas.toDataURL('image/png');
-      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
-
-      // Save the PDF
-      pdf.save(`Nota_${transaction.id}.pdf`);
-      toast.success("PDF berhasil diunduh");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      toast.error("Gagal membuat PDF. Silakan coba lagi.");
-    } finally {
-      setIsGeneratingPDF(false);
+    // Create a clone of the receipt to adjust styles for PDF
+    const receiptElement = receiptRef.current.querySelector('.receipt-container');
+    if (!receiptElement) {
+      throw new Error("Element nota tidak ditemukan");
     }
-  };
+
+    const receiptClone = receiptElement.cloneNode(true) as HTMLElement;
+
+    // Gambar di footer (kanan bawah nota):
+    const footerDiv = receiptClone.querySelector('.receipt-footer') as HTMLElement;
+    if (footerDiv) {
+      // Hapus semua <img> lama jika ada (antisipasi re-download)
+      Array.from(footerDiv.getElementsByTagName("img")).forEach(img => img.remove());
+      
+      // Tambahkan gambar baru dengan ukuran 2x dan penempatan kanan
+      const img = document.createElement('img');
+      img.src = '/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png';
+      img.alt = "Adreena Store";
+      // Perbesar 2x ukuran awal, sebelumnya 108px, jadi 216px
+      img.style.height = "216px"; 
+      img.style.width = "auto";
+      img.style.objectFit = "contain";
+      img.style.marginLeft = "20px";
+      img.style.maxWidth = "240px"; // Tambah batasan maksimum lebar
+
+      footerDiv.style.display = 'flex';
+      footerDiv.style.justifyContent = 'space-between';
+      footerDiv.style.alignItems = 'center';
+      footerDiv.appendChild(img);
+    }
+
+    receiptClone.style.width = '210mm'; // A4 width
+    receiptClone.style.padding = '10mm';
+    receiptClone.style.backgroundColor = 'white';
+    receiptClone.style.color = 'black';
+    receiptClone.style.fontFamily = 'Arial, sans-serif';
+
+    // Append clone to body temporarily but hide it
+    const tempDiv = document.createElement('div');
+    tempDiv.style.position = 'absolute';
+    tempDiv.style.left = '-9999px';
+    tempDiv.appendChild(receiptClone);
+    document.body.appendChild(tempDiv);
+
+    // Generate canvas from the clone
+    const canvas = await html2canvas(receiptClone, {
+      scale: 2, // Higher scale for better quality
+      logging: false,
+      backgroundColor: 'white',
+    });
+
+    // Remove the temporary element
+    document.body.removeChild(tempDiv);
+
+    // Create PDF
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
+
+    // Calculate dimensions to fit the receipt properly
+    const imgWidth = 190; // slightly less than A4 width
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    // Add image to PDF
+    const imgData = canvas.toDataURL('image/png');
+    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+
+    // Save the PDF
+    pdf.save(`Nota_${transaction.id}.pdf`);
+    toast.success("PDF berhasil diunduh");
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    toast.error("Gagal membuat PDF. Silakan coba lagi.");
+  } finally {
+    setIsGeneratingPDF(false);
+  }
+};
 
   const handleShareWhatsApp = () => {
     if (!storeProfile.storeWhatsapp) {
