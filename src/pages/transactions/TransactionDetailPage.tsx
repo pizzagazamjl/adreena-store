@@ -106,16 +106,16 @@ const TransactionDetailPage: React.FC = () => {
       // Hapus semua <img> lama jika ada (antisipasi re-download)
       Array.from(footerDiv.getElementsByTagName("img")).forEach(img => img.remove());
       
-      // Tambahkan gambar baru dengan ukuran 2x dan penempatan kanan
+      // Tambahkan gambar baru dengan ukuran 75% dari sebelumnya
       const img = document.createElement('img');
       img.src = '/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png';
       img.alt = "Adreena Store";
-      // Perbesar 2x ukuran awal, sebelumnya 108px, jadi 216px
-      img.style.height = "216px"; 
+      // Kurangi menjadi 75% dari ukuran sebelumnya, dari 216px menjadi 162px
+      img.style.height = "162px"; 
       img.style.width = "auto";
       img.style.objectFit = "contain";
       img.style.marginLeft = "20px";
-      img.style.maxWidth = "240px"; // Tambah batasan maksimum lebar
+      img.style.maxWidth = "180px"; // Sesuaikan proporsi max width
 
       footerDiv.style.display = 'flex';
       footerDiv.style.justifyContent = 'space-between';
