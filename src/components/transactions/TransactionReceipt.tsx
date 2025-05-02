@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useStore } from "@/contexts/StoreContext";
 import { Transaction } from "@/types";
@@ -60,12 +61,8 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
               <h3 className="text-sm font-medium text-gray-600 mb-2">Informasi Toko</h3>
               <div className="border-t border-gray-200 pt-2">
                 <div className="font-medium">{storeProfile.storeName}</div>
-                {storeProfile.storeAddress && (
-                  <div className="text-sm text-gray-600">{storeProfile.storeAddress}</div>
-                )}
-                {storeProfile.storePhone && (
-                  <div className="text-sm text-gray-600">{storeProfile.storePhone}</div>
-                )}
+                <div className="text-sm text-gray-600">Margahayu - Majalengka</div>
+                <div className="text-sm text-gray-600">085135135143</div>
               </div>
             </div>
           </div>
