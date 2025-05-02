@@ -2,6 +2,7 @@
 import React from "react";
 import { useStore } from "@/contexts/StoreContext";
 import { Link, useLocation } from "react-router-dom";
+import StoreSelector from "./StoreSelector";
 
 interface HeaderProps {
   title?: string;
@@ -21,9 +22,12 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
     <header className="sticky top-0 z-10 bg-adreena-500 text-white border-b border-adreena-600 shadow-md">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-bold">
-            {title || storeProfile.storeName}
-          </h1>
+          <div className="flex items-center gap-4">
+            <StoreSelector />
+            <h1 className="text-lg font-bold">
+              {title || storeProfile.storeName}
+            </h1>
+          </div>
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-6">

@@ -1,47 +1,48 @@
 
 import React from "react";
-import { useStore } from "@/contexts/StoreContext";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { 
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormDescription
-} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useStore } from "@/contexts/StoreContext";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
 const formSchema = z.object({
-  storeName: z.string().min(1, "Nama toko harus diisi"),
+  storeName: z.string().min(1, "Nama toko tidak boleh kosong"),
   storeAddress: z.string().optional(),
   storePhone: z.string().optional(),
   storeWhatsapp: z.string().optional(),
   storeFooter: z.string().optional(),
 });
 
-type FormValues = z.infer<typeof formSchema>;
-
 const StoreProfileForm = () => {
-  const { storeProfile, updateStoreProfile, isLoading } = useStore();
+  const { storeProfile, updateStoreProfile } = useStore();
   
-  const form = useForm<FormValues>({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: storeProfile,
+    defaultValues: {
+      storeName: storeProfile.storeName,
+      storeAddress: storeProfile.storeAddress || "",
+      storePhone: storeProfile.storePhone || "",
+      storeWhatsapp: storeProfile.storeWhatsapp || "",
+      storeFooter: storeProfile.storeFooter || "",
+    },
   });
-
-  const onSubmit = (data: FormValues) => {
-    updateStoreProfile(data);
-    toast.success("Pengaturan toko berhasil diperbarui");
-  };
-
-  if (isLoading) {
-    return <div className="text-center py-4">Memuat...</div>;
+  
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    updateStoreProfile(values);
+    toast.success("Pengaturan berhasil disimpan");
   }
 
   return (
@@ -54,90 +55,83 @@ const StoreProfileForm = () => {
             <FormItem>
               <FormLabel>Nama Toko</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="Nama Toko" {...field} />
               </FormControl>
-              <FormDescription>
-                Nama ini akan muncul di bagian atas nota transaksi.
-              </FormDescription>
+              <FormMessage />
             </FormItem>
           )}
         />
-
+        
         <FormField
           control={form.control}
           name="storeAddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Alamat Toko (Opsional)</FormLabel>
+              <FormLabel>Alamat</FormLabel>
               <FormControl>
-                <Textarea 
-                  {...field} 
-                  value={field.value || ""}
-                />
+                <Input placeholder="Alamat Toko" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
-
-        <FormField
-          control={form.control}
-          name="storePhone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nomor Telepon (Opsional)</FormLabel>
-              <FormControl>
-                <Input 
-                  {...field} 
-                  value={field.value || ""}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="storeWhatsapp"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nomor WhatsApp (Opsional)</FormLabel>
-              <FormControl>
-                <Input 
-                  {...field} 
-                  value={field.value || ""}
-                  placeholder="contoh: 6281234567890"
-                />
-              </FormControl>
-              <FormDescription>
-                Digunakan untuk berbagi nota via WhatsApp. Masukkan dengan format internasional tanpa karakter tambahan.
-              </FormDescription>
-            </FormItem>
-          )}
-        />
-
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="storePhone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>No. Telepon</FormLabel>
+                <FormControl>
+                  <Input placeholder="No. Telepon" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Nomor telepon yang ditampilkan pada nota
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="storeWhatsapp"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>No. WhatsApp</FormLabel>
+                <FormControl>
+                  <Input placeholder="No. WhatsApp" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Format: 62812XXXXXXX (tanpa +/0 di depan)
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        
         <FormField
           control={form.control}
           name="storeFooter"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Catatan Footer Nota (Opsional)</FormLabel>
+              <FormLabel>Teks Footer Nota</FormLabel>
               <FormControl>
-                <Input 
+                <Textarea 
+                  placeholder="Pesan di bagian bawah nota" 
                   {...field} 
-                  value={field.value || ""}
-                  placeholder="contoh: Terima kasih telah berbelanja di Adreena Store"
                 />
               </FormControl>
-              <FormDescription>
-                Teks ini akan muncul di bagian bawah nota transaksi.
-              </FormDescription>
+              <FormMessage />
             </FormItem>
           )}
         />
-
-        <div className="flex justify-end">
+        
+        <div className="pt-4">
           <Button 
-            type="submit"
+            type="submit" 
             className="bg-adreena-500 hover:bg-adreena-600"
           >
             Simpan Pengaturan

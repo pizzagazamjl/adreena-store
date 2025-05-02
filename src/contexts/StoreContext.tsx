@@ -6,45 +6,85 @@ interface StoreContextType {
   storeProfile: StoreProfile;
   updateStoreProfile: (profile: Partial<StoreProfile>) => void;
   isLoading: boolean;
+  availableStores: StoreProfile[];
+  activeStoreId: string;
+  switchStore: (storeId: string) => void;
 }
 
-const defaultStoreProfile: StoreProfile = {
-  storeName: "Adreena Store",
-  storeAddress: "Jl. Pemuda No.34, Majalengka",
-  storePhone: "085351881666",
-  storeWhatsapp: "085351881666",
-  storeFooter: "Terima kasih telah berbelanja di Adreena Store",
-};
+const defaultStores: StoreProfile[] = [
+  {
+    id: "adreena-store",
+    storeName: "Adreena Store",
+    storeAddress: "Jl. Pemuda No.34, Majalengka",
+    storePhone: "085351881666",
+    storeWhatsapp: "085351881666",
+    storeFooter: "Terima kasih telah berbelanja di Adreena Store",
+  },
+  {
+    id: "alzena-point",
+    storeName: "Alzena Point",
+    storeAddress: "Jl. Pahlawan No.12, Majalengka",
+    storePhone: "085351881777",
+    storeWhatsapp: "085351881777",
+    storeFooter: "Terima kasih telah berbelanja di Alzena Point",
+  }
+];
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ 
   children 
 }) => {
-  const [storeProfile, setStoreProfile] = useState<StoreProfile>(defaultStoreProfile);
+  const [availableStores, setAvailableStores] = useState<StoreProfile[]>(defaultStores);
+  const [activeStoreId, setActiveStoreId] = useState<string>("adreena-store");
   const [isLoading, setIsLoading] = useState(true);
 
+  // Get the active store profile based on activeStoreId
+  const storeProfile = availableStores.find(store => store.id === activeStoreId) || availableStores[0];
+
   useEffect(() => {
-    // In a real app, we would load from Supabase here
-    const storedProfile = localStorage.getItem("storeProfile");
+    // Load stores from localStorage
+    const storedStores = localStorage.getItem("availableStores");
+    const storedActiveStoreId = localStorage.getItem("activeStoreId");
     
-    if (storedProfile) {
-      setStoreProfile(JSON.parse(storedProfile));
+    if (storedStores) {
+      setAvailableStores(JSON.parse(storedStores));
+    }
+    
+    if (storedActiveStoreId) {
+      setActiveStoreId(storedActiveStoreId);
     }
     
     setIsLoading(false);
   }, []);
 
   const updateStoreProfile = (profile: Partial<StoreProfile>) => {
-    const updatedProfile = { ...storeProfile, ...profile };
-    setStoreProfile(updatedProfile);
-    localStorage.setItem("storeProfile", JSON.stringify(updatedProfile));
+    const updatedStores = availableStores.map(store => 
+      store.id === activeStoreId ? { ...store, ...profile } : store
+    );
+    
+    setAvailableStores(updatedStores);
+    localStorage.setItem("availableStores", JSON.stringify(updatedStores));
     
     // In a real app, we would save to Supabase here too
   };
 
+  const switchStore = (storeId: string) => {
+    if (availableStores.some(store => store.id === storeId)) {
+      setActiveStoreId(storeId);
+      localStorage.setItem("activeStoreId", storeId);
+    }
+  };
+
   return (
-    <StoreContext.Provider value={{ storeProfile, updateStoreProfile, isLoading }}>
+    <StoreContext.Provider value={{ 
+      storeProfile, 
+      updateStoreProfile, 
+      isLoading, 
+      availableStores, 
+      activeStoreId, 
+      switchStore 
+    }}>
       {children}
     </StoreContext.Provider>
   );

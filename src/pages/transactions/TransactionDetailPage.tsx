@@ -100,6 +100,9 @@ const TransactionDetailPage: React.FC = () => {
 
     const receiptClone = receiptElement.cloneNode(true) as HTMLElement;
 
+    // Check if we're using Alzena Point store
+    const isAlzenaPoint = storeProfile.id === "alzena-point";
+
     // Gambar di footer (kanan bawah nota):
     const footerDiv = receiptClone.querySelector('.receipt-footer') as HTMLElement;
     if (footerDiv) {
@@ -108,8 +111,8 @@ const TransactionDetailPage: React.FC = () => {
       
       // Tambahkan gambar baru dengan ukuran 75% dari sebelumnya
       const img = document.createElement('img');
-      img.src = '/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png';
-      img.alt = "Adreena Store";
+      img.src = isAlzenaPoint ? '/lovable-uploads/d92af38d-c7a4-482e-9633-55a279c0b29c.png' : '/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png';
+      img.alt = storeProfile.storeName;
       // Kurangi menjadi 75% dari ukuran sebelumnya, dari 216px menjadi 162px
       img.style.height = "162px"; 
       img.style.width = "auto";
@@ -123,18 +126,28 @@ const TransactionDetailPage: React.FC = () => {
       footerDiv.appendChild(img);
     }
 
+    // Apply Alzena Point styling if needed
+    if (isAlzenaPoint) {
+      receiptClone.style.backgroundColor = '#f0f7ff';
+      
+      // Style header text for Alzena Point
+      const headerTitle = receiptClone.querySelector('.receipt-header div:first-child') as HTMLElement;
+      if (headerTitle) {
+        headerTitle.style.color = '#1a56db';
+      }
+      
+      // Style total amount for Alzena Point
+      const totalElement = receiptClone.querySelector('.receipt-total div') as HTMLElement;
+      if (totalElement) {
+        totalElement.style.color = '#1a56db';
+      }
+    }
+
     receiptClone.style.width = '210mm'; // A4 width
     receiptClone.style.padding = '10mm';
-    receiptClone.style.backgroundColor = 'white';
+    receiptClone.style.backgroundColor = isAlzenaPoint ? '#f0f7ff' : 'white';
     receiptClone.style.color = 'black';
     receiptClone.style.fontFamily = 'Arial, sans-serif';
-
-    // Append clone to body temporarily but hide it
-    const tempDiv = document.createElement('div');
-    tempDiv.style.position = 'absolute';
-    tempDiv.style.left = '-9999px';
-    tempDiv.appendChild(receiptClone);
-    document.body.appendChild(tempDiv);
 
     // Generate canvas from the clone
     const canvas = await html2canvas(receiptClone, {
