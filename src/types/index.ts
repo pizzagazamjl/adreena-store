@@ -1,5 +1,6 @@
 
 export interface StoreProfile {
+  id: string;
   storeName: string;
   storeAddress?: string;
   storePhone?: string;
