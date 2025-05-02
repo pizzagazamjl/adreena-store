@@ -216,7 +216,6 @@ const TransactionDetailPage: React.FC = () => {
 
       // Calculate dimensions to fit the receipt properly
       const imgWidth = isAlzenaPoint ? 190 : 70; // slightly less than page width      
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
       const imgWidth = isAdreenaStore ? 190 : 70; // slightly less than page width
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       // Add image to PDF
