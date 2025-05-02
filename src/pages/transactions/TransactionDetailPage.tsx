@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
@@ -69,30 +70,29 @@ const TransactionDetailPage: React.FC = () => {
               font-size: ${isAlzenaPoint ? '13px' : '12px'}; 
               margin: 0; 
               padding: 10px; 
-              background-color: ${isAlzenaPoint ? '#f9f5ff' : '#ffffff'};
+              background-color: ${isAlzenaPoint ? '#ffffff' : '#ffffff'};
             }
             .receipt-container { 
-              width: 76mm; 
+              width: ${isAlzenaPoint ? '210mm' : '76mm'}; 
               margin: 0 auto; 
               padding: ${isAlzenaPoint ? '15px' : '10px'};
-              ${isAlzenaPoint ? 'border-radius: 8px; border: 1px solid #d8b4fe;' : ''}
+              ${isAlzenaPoint ? 'border: 1px solid #e2e8f0;' : ''}
             }
             .receipt-header { 
-              text-align: center; 
-              margin-bottom: ${isAlzenaPoint ? '15px' : '10px'}; 
-              ${isAlzenaPoint ? 'color: #7e22ce; font-weight: bold;' : ''}
+              text-align: ${isAlzenaPoint ? 'left' : 'center'}; 
+              margin-bottom: ${isAlzenaPoint ? '20px' : '10px'}; 
+              ${isAlzenaPoint ? 'display: flex; justify-content: space-between; align-items: center;' : ''}
             }
             .receipt-divider { 
-              border-top: 1px ${isAlzenaPoint ? 'solid #d8b4fe' : 'dashed #000'}; 
+              border-top: 1px ${isAlzenaPoint ? 'solid #e2e8f0' : 'dashed #000'}; 
               margin: 8px 0; 
             }
             .receipt-total { 
               font-weight: bold; 
               margin-top: 8px; 
-              ${isAlzenaPoint ? 'background-color: #f3e8ff; padding: 8px; border-radius: 5px;' : ''}
             }
             .receipt-footer { 
-              text-align: center; 
+              text-align: ${isAlzenaPoint ? 'left' : 'center'}; 
               margin-top: 15px; 
               font-size: ${isAlzenaPoint ? '11px' : '10px'};
               display: flex; 
@@ -100,7 +100,25 @@ const TransactionDetailPage: React.FC = () => {
               align-items: center; 
             }
             .flex { display: flex; justify-content: space-between; }
-            ${isAlzenaPoint ? '.item-detail { margin-bottom: 10px; border-bottom: 1px dashed #d8b4fe; padding-bottom: 5px; }' : ''}
+            
+            /* Alzena Point specific styles */
+            ${isAlzenaPoint ? `
+              table { border-collapse: collapse; width: 100%; }
+              th { background-color: #1f2937; color: white; text-align: left; padding: 8px; }
+              td { padding: 8px; border-bottom: 1px solid #e2e8f0; }
+              tr:nth-child(even) { background-color: #f9fafb; }
+              .customer-info, .store-info { margin-bottom: 20px; }
+              .customer-info h3, .store-info h3 { font-size: 14px; color: #6b7280; margin-bottom: 5px; }
+              .info-content { border-top: 1px solid #e2e8f0; padding-top: 5px; }
+              .subtotal-section { display: flex; justify-content: flex-end; margin: 15px 0; }
+              .subtotal-container { width: 200px; }
+              .subtotal-row { display: flex; justify-content: space-between; padding: 5px 0; border-top: 1px solid #e2e8f0; }
+              .total-row { font-weight: bold; border-top: 1px solid #e2e8f0; margin-top: 5px; padding-top: 5px; }
+              .terms-section { margin-top: 30px; font-size: 11px; color: #6b7280; border-top: 1px solid #e2e8f0; padding-top: 10px; }
+              .terms-title { text-transform: uppercase; font-weight: 500; margin-bottom: 5px; }
+              .terms-list { padding-left: 20px; }
+              .terms-list li { margin-bottom: 3px; }
+            ` : ''}
           </style>
         </head>
         <body>
@@ -169,23 +187,16 @@ const TransactionDetailPage: React.FC = () => {
 
       // Apply receipt-specific styling
       if (isAlzenaPoint) {
-        receiptClone.style.backgroundColor = '#f9f5ff';
+        receiptClone.style.backgroundColor = '#ffffff';
         receiptClone.style.fontFamily = 'Arial, sans-serif';
         receiptClone.style.color = '#4b5563';
-        
-        // Enhance Alzena Point receipt styling for PDF
-        const headerTitle = receiptClone.querySelector('.receipt-header div:first-child') as HTMLElement;
-        if (headerTitle) {
-          headerTitle.style.color = '#7e22ce';
-          headerTitle.style.fontFamily = 'serif';
-          headerTitle.style.fontSize = '22px';
-        }
+        receiptClone.style.width = '210mm'; // A4 width for Alzena
       } else {
         receiptClone.style.backgroundColor = 'white';
         receiptClone.style.fontFamily = 'Courier New, monospace';
+        receiptClone.style.width = '76mm'; // Thermal receipt width for Adreena
       }
 
-      receiptClone.style.width = '210mm'; // A4 width
       receiptClone.style.padding = '10mm';
       receiptClone.style.color = 'black';
 
@@ -193,7 +204,7 @@ const TransactionDetailPage: React.FC = () => {
       const canvas = await html2canvas(receiptClone, {
         scale: 2, // Higher scale for better quality
         logging: false,
-        backgroundColor: isAlzenaPoint ? '#f9f5ff' : 'white',
+        backgroundColor: 'white',
       });
 
       // Remove the temporary element
@@ -201,13 +212,13 @@ const TransactionDetailPage: React.FC = () => {
 
       // Create PDF
       const pdf = new jsPDF({
-        orientation: 'portrait',
+        orientation: isAlzenaPoint ? 'portrait' : 'portrait',
         unit: 'mm',
-        format: 'a4',
+        format: isAlzenaPoint ? 'a4' : [80, 200], // A4 for Alzena, custom for Adreena
       });
 
       // Calculate dimensions to fit the receipt properly
-      const imgWidth = 190; // slightly less than A4 width
+      const imgWidth = isAlzenaPoint ? 190 : 70; // slightly less than page width
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
       // Add image to PDF

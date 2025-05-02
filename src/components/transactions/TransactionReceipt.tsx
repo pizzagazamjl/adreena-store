@@ -33,82 +33,118 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
       </div>
 
       {isAlzenaPoint ? (
-        // ALZENA POINT RECEIPT DESIGN - Modern & Different
-        <div className="receipt-container bg-purple-50 border border-purple-200 rounded-lg p-6" id="receipt">
-          <div className="receipt-header text-center mb-5">
-            <div className="text-xl font-serif font-bold text-purple-800 mb-2">{storeProfile.storeName}</div>
-            {storeProfile.storeAddress && (
-              <div className="text-purple-600 text-sm font-medium mb-1">{storeProfile.storeAddress}</div>
-            )}
-            {storeProfile.storePhone && (
-              <div className="text-purple-600 text-sm">{storeProfile.storePhone}</div>
-            )}
-          </div>
-          
-          <div className="bg-white p-4 rounded-md shadow-sm mb-4">
-            <div className="grid grid-cols-2 text-sm gap-y-1">
-              <div className="font-medium text-gray-600">Receipt No:</div>
-              <div className="text-right font-bold">{transaction.id}</div>
-              
-              <div className="font-medium text-gray-600">Date:</div>
-              <div className="text-right">{formatDate(transaction.date)}</div>
-              
-              <div className="font-medium text-gray-600">Time:</div>
-              <div className="text-right">{formatTime(transaction.date)}</div>
-              
-              {transaction.customerName && (
-                <>
-                  <div className="font-medium text-gray-600">Customer:</div>
-                  <div className="text-right">{transaction.customerName}</div>
-                </>
-              )}
+        // ALZENA POINT RECEIPT DESIGN - Professional Invoice Style
+        <div className="receipt-container bg-white border border-gray-200 rounded-lg p-6" id="receipt">
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-xl font-bold text-gray-800">NOTA</h1>
+            <div className="text-right">
+              <div className="mb-1">
+                <span className="text-sm text-gray-600">Nomor Nota</span>
+                <div className="font-medium">{transaction.id}</div>
+              </div>
+              <div>
+                <span className="text-sm text-gray-600">Tanggal</span>
+                <div className="font-medium">{formatDate(transaction.date)}</div>
+              </div>
             </div>
           </div>
           
-          <div className="mb-4">
-            <div className="text-sm font-medium text-purple-800 mb-2 border-b border-purple-200 pb-1">
-              ITEM DETAILS
-            </div>
-            {transaction.items.map((item, index) => (
-              <div key={index} className={`py-2 ${index !== transaction.items.length - 1 ? "border-b border-dashed border-purple-100" : ""}`}>
-                <div className="flex justify-between font-medium">
-                  <span>{item.name}</span>
-                </div>
-                <div className="flex justify-between text-sm text-gray-600">
-                  <span>{item.quantity} × {formatCurrency(item.price)}</span>
-                  <span>{formatCurrency(item.price * item.quantity)}</span>
+          <div className="grid grid-cols-2 gap-6 mb-8">
+            <div>
+              <h3 className="text-sm font-medium text-gray-600 mb-2">Informasi Pembeli</h3>
+              <div className="border-t border-gray-200 pt-2">
+                <div className="mb-1">
+                  <div className="font-medium">{transaction.customerName || "Pelanggan Umum"}</div>
                 </div>
               </div>
-            ))}
+            </div>
+            
+            <div>
+              <h3 className="text-sm font-medium text-gray-600 mb-2">Informasi Toko</h3>
+              <div className="border-t border-gray-200 pt-2">
+                <div className="mb-1">
+                  <div className="font-medium">{storeProfile.storeName}</div>
+                </div>
+                <div className="text-sm text-gray-600">
+                  {storeProfile.storeAddress && (
+                    <div className="mb-1">{storeProfile.storeAddress}</div>
+                  )}
+                  {storeProfile.storePhone && (
+                    <div>{storeProfile.storePhone}</div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
           
-          <div className="bg-purple-100 p-3 rounded-lg">
-            <div className="flex justify-between font-bold text-purple-900">
-              <span>TOTAL</span>
-              <span>{formatCurrency(transaction.totalAmount)}</span>
+          <div className="mb-6">
+            <h3 className="text-sm font-medium text-gray-600 mb-2">Produk</h3>
+            <div className="overflow-hidden border border-gray-200 rounded-lg">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-gray-800 text-white">
+                    <th className="py-2 px-4 text-left">Deskripsi</th>
+                    <th className="py-2 px-4 text-center">Jumlah</th>
+                    <th className="py-2 px-4 text-right">Harga Satuan</th>
+                    <th className="py-2 px-4 text-right">Total</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {transaction.items.map((item, index) => (
+                    <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                      <td className="py-3 px-4">{item.name}</td>
+                      <td className="py-3 px-4 text-center">{item.quantity}</td>
+                      <td className="py-3 px-4 text-right">{formatCurrency(item.price)}</td>
+                      <td className="py-3 px-4 text-right font-medium">{formatCurrency(item.price * item.quantity)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div className="flex justify-end mb-6">
+            <div className="w-64">
+              <div className="border-t border-gray-200 py-2 flex justify-between">
+                <span className="text-sm font-medium">Subtotal</span>
+                <span>{formatCurrency(transaction.totalAmount)}</span>
+              </div>
+              <div className="border-t border-gray-200 pt-2 pb-1 mt-2 flex justify-between font-bold">
+                <span>TOTAL</span>
+                <span>{formatCurrency(transaction.totalAmount)}</span>
+              </div>
             </div>
           </div>
           
           {transaction.note && (
-            <div className="mt-4 text-sm bg-purple-50 border-l-4 border-purple-300 p-2">
-              <span className="font-medium">Note:</span> {transaction.note}
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-600 mb-2">Catatan Tambahan</h3>
+              <div className="border-t border-gray-200 pt-2 text-sm">
+                {transaction.note}
+              </div>
             </div>
           )}
           
-          <div className="mt-5 flex items-center justify-between">
-            <div className="text-sm text-purple-700 max-w-[60%]">
-              {storeProfile.storeFooter}
-            </div>
-            <div>
-              <img
-                src="/lovable-uploads/d92af38d-c7a4-482e-9633-55a279c0b29c.png"
-                alt="Alzena Point"
-                style={{
-                  height: 100,
-                  width: "auto",
-                  objectFit: "contain",
-                }}
-              />
+          <div className="mt-8 pt-4 border-t border-gray-200 text-xs text-gray-600">
+            <div className="flex justify-between items-center">
+              <div>
+                <div className="uppercase font-medium mb-1">SYARAT DAN KETENTUAN</div>
+                <ol className="list-decimal pl-4 space-y-1">
+                  <li>Barang yang sudah dibeli tidak dapat dikembalikan.</li>
+                  <li>Penjual menjamin produk dalam kondisi baik saat pengiriman.</li>
+                  <li>Pembayaran dianggap lunas ketika sudah terverifikasi.</li>
+                </ol>
+                <div className="mt-2">
+                  {storeProfile.storeFooter}
+                </div>
+              </div>
+              <div>
+                <img
+                  src="/lovable-uploads/d92af38d-c7a4-482e-9633-55a279c0b29c.png"
+                  alt="Alzena Point"
+                  className="h-24 w-auto object-contain"
+                />
+              </div>
             </div>
           </div>
         </div>
