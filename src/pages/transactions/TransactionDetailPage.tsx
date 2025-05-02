@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
@@ -161,30 +160,6 @@ const TransactionDetailPage: React.FC = () => {
       tempElement.appendChild(receiptClone);
       document.body.appendChild(tempElement);
 
-      // Gambar di footer (kanan bawah nota):
-      const footerDiv = receiptClone.querySelector('.receipt-footer') as HTMLElement || 
-                        receiptClone.querySelector('div:last-child') as HTMLElement;
-                        
-      if (footerDiv) {
-        // Hapus semua <img> lama jika ada (antisipasi re-download)
-        Array.from(footerDiv.getElementsByTagName("img")).forEach(img => img.remove());
-        
-        // Tambahkan gambar baru dengan ukuran yang sesuai
-        const img = document.createElement('img');
-        img.src = isAlzenaPoint ? '/lovable-uploads/d92af38d-c7a4-482e-9633-55a279c0b29c.png' : '/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png';
-        img.alt = storeProfile.storeName;
-        img.style.height = isAlzenaPoint ? "140px" : "162px"; 
-        img.style.width = "auto";
-        img.style.objectFit = "contain";
-        img.style.marginLeft = "20px";
-        img.style.maxWidth = isAlzenaPoint ? "160px" : "180px";
-
-        footerDiv.style.display = 'flex';
-        footerDiv.style.justifyContent = 'space-between';
-        footerDiv.style.alignItems = 'center';
-        footerDiv.appendChild(img);
-      }
-
       // Apply receipt-specific styling
       if (isAlzenaPoint) {
         receiptClone.style.backgroundColor = '#ffffff';
@@ -195,6 +170,28 @@ const TransactionDetailPage: React.FC = () => {
         receiptClone.style.backgroundColor = 'white';
         receiptClone.style.fontFamily = 'Courier New, monospace';
         receiptClone.style.width = '76mm'; // Thermal receipt width for Adreena
+        
+        // For Adreena, we need to add the logo to the footer
+        const footerDiv = receiptClone.querySelector('.receipt-footer') as HTMLElement;
+        if (footerDiv) {
+          // Hapus semua <img> lama jika ada (antisipasi re-download)
+          Array.from(footerDiv.getElementsByTagName("img")).forEach(img => img.remove());
+          
+          // Tambahkan gambar baru dengan ukuran yang sesuai
+          const img = document.createElement('img');
+          img.src = '/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png';
+          img.alt = storeProfile.storeName;
+          img.style.height = "162px"; 
+          img.style.width = "auto";
+          img.style.objectFit = "contain";
+          img.style.marginLeft = "20px";
+          img.style.maxWidth = "180px";
+
+          footerDiv.style.display = 'flex';
+          footerDiv.style.justifyContent = 'space-between';
+          footerDiv.style.alignItems = 'center';
+          footerDiv.appendChild(img);
+        }
       }
 
       receiptClone.style.padding = '10mm';

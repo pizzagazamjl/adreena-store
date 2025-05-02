@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useStore } from "@/contexts/StoreContext";
 import { Transaction } from "@/types";
@@ -35,7 +34,7 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
       {isAlzenaPoint ? (
         // ALZENA POINT RECEIPT DESIGN - Professional Invoice Style
         <div className="receipt-container bg-white border border-gray-200 rounded-lg p-6" id="receipt">
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex justify-between items-center mb-6">
             <h1 className="text-xl font-bold text-gray-800">NOTA</h1>
             <div className="text-right">
               <div className="mb-1">
@@ -49,30 +48,24 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
             </div>
           </div>
           
-          <div className="grid grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-2 gap-6 mb-6">
             <div>
               <h3 className="text-sm font-medium text-gray-600 mb-2">Informasi Pembeli</h3>
               <div className="border-t border-gray-200 pt-2">
-                <div className="mb-1">
-                  <div className="font-medium">{transaction.customerName || "Pelanggan Umum"}</div>
-                </div>
+                <div className="font-medium">{transaction.customerName || "Pelanggan Umum"}</div>
               </div>
             </div>
             
             <div>
               <h3 className="text-sm font-medium text-gray-600 mb-2">Informasi Toko</h3>
               <div className="border-t border-gray-200 pt-2">
-                <div className="mb-1">
-                  <div className="font-medium">{storeProfile.storeName}</div>
-                </div>
-                <div className="text-sm text-gray-600">
-                  {storeProfile.storeAddress && (
-                    <div className="mb-1">{storeProfile.storeAddress}</div>
-                  )}
-                  {storeProfile.storePhone && (
-                    <div>{storeProfile.storePhone}</div>
-                  )}
-                </div>
+                <div className="font-medium">{storeProfile.storeName}</div>
+                {storeProfile.storeAddress && (
+                  <div className="text-sm text-gray-600">{storeProfile.storeAddress}</div>
+                )}
+                {storeProfile.storePhone && (
+                  <div className="text-sm text-gray-600">{storeProfile.storePhone}</div>
+                )}
               </div>
             </div>
           </div>
@@ -125,25 +118,16 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
             </div>
           )}
           
-          <div className="mt-8 pt-4 border-t border-gray-200 text-xs text-gray-600">
-            <div className="flex justify-between items-center">
-              <div>
-                <div className="uppercase font-medium mb-1">SYARAT DAN KETENTUAN</div>
-                <ol className="list-decimal pl-4 space-y-1">
-                  <li>Barang yang sudah dibeli tidak dapat dikembalikan.</li>
-                  <li>Penjual menjamin produk dalam kondisi baik saat pengiriman.</li>
-                  <li>Pembayaran dianggap lunas ketika sudah terverifikasi.</li>
-                </ol>
-                <div className="mt-2">
-                  {storeProfile.storeFooter}
-                </div>
-              </div>
-              <div>
-                <img
-                  src="/lovable-uploads/d92af38d-c7a4-482e-9633-55a279c0b29c.png"
-                  alt="Alzena Point"
-                  className="h-24 w-auto object-contain"
-                />
+          <div className="mt-6 pt-4 border-t border-gray-200 text-xs text-gray-600">
+            <div>
+              <div className="uppercase font-medium mb-1">SYARAT DAN KETENTUAN</div>
+              <ol className="list-decimal pl-4 space-y-1">
+                <li>Barang yang sudah dibeli tidak dapat dikembalikan.</li>
+                <li>Penjual menjamin produk dalam kondisi baik saat pengiriman.</li>
+                <li>Pembayaran dianggap lunas ketika sudah terverifikasi.</li>
+              </ol>
+              <div className="mt-2">
+                {storeProfile.storeFooter}
               </div>
             </div>
           </div>
