@@ -56,18 +56,51 @@ const TransactionDetailPage: React.FC = () => {
       return;
     }
     
+    // Check if we're using Alzena Point store
+    const isAlzenaPoint = storeProfile.id === "alzena-point";
+    
     printWindow.document.write(`
       <html>
         <head>
           <title>Nota ${transaction.id}</title>
           <style>
-            body { font-family: 'Courier New', monospace; font-size: 12px; margin: 0; padding: 10px; }
-            .receipt-container { width: 76mm; margin: 0 auto; }
-            .receipt-header { text-align: center; margin-bottom: 10px; }
-            .receipt-divider { border-top: 1px dashed #000; margin: 8px 0; }
-            .receipt-total { font-weight: bold; margin-top: 8px; }
-            .receipt-footer { text-align: center; margin-top: 15px; font-size: 10px; display: flex; justify-content: space-between; align-items: center; }
+            body { 
+              font-family: ${isAlzenaPoint ? "'Arial', sans-serif" : "'Courier New', monospace"}; 
+              font-size: ${isAlzenaPoint ? '13px' : '12px'}; 
+              margin: 0; 
+              padding: 10px; 
+              background-color: ${isAlzenaPoint ? '#f9f5ff' : '#ffffff'};
+            }
+            .receipt-container { 
+              width: 76mm; 
+              margin: 0 auto; 
+              padding: ${isAlzenaPoint ? '15px' : '10px'};
+              ${isAlzenaPoint ? 'border-radius: 8px; border: 1px solid #d8b4fe;' : ''}
+            }
+            .receipt-header { 
+              text-align: center; 
+              margin-bottom: ${isAlzenaPoint ? '15px' : '10px'}; 
+              ${isAlzenaPoint ? 'color: #7e22ce; font-weight: bold;' : ''}
+            }
+            .receipt-divider { 
+              border-top: 1px ${isAlzenaPoint ? 'solid #d8b4fe' : 'dashed #000'}; 
+              margin: 8px 0; 
+            }
+            .receipt-total { 
+              font-weight: bold; 
+              margin-top: 8px; 
+              ${isAlzenaPoint ? 'background-color: #f3e8ff; padding: 8px; border-radius: 5px;' : ''}
+            }
+            .receipt-footer { 
+              text-align: center; 
+              margin-top: 15px; 
+              font-size: ${isAlzenaPoint ? '11px' : '10px'};
+              display: flex; 
+              justify-content: space-between; 
+              align-items: center; 
+            }
             .flex { display: flex; justify-content: space-between; }
+            ${isAlzenaPoint ? '.item-detail { margin-bottom: 10px; border-bottom: 1px dashed #d8b4fe; padding-bottom: 5px; }' : ''}
           </style>
         </head>
         <body>
@@ -93,7 +126,7 @@ const TransactionDetailPage: React.FC = () => {
       toast.info("Sedang membuat PDF, mohon tunggu...");
 
       // Create a clone of the receipt to adjust styles for PDF
-      const receiptElement = receiptRef.current.querySelector('.receipt-container');
+      const receiptElement = receiptRef.current.querySelector('#receipt');
       if (!receiptElement) {
         throw new Error("Element nota tidak ditemukan");
       }
@@ -104,28 +137,29 @@ const TransactionDetailPage: React.FC = () => {
       const isAlzenaPoint = storeProfile.id === "alzena-point";
 
       // Add the clone to the document temporarily (outside the viewport) for html2canvas
-      const tempDiv = document.createElement('div');
-      tempDiv.style.position = 'absolute';
-      tempDiv.style.left = '-9999px';
-      tempDiv.appendChild(receiptClone);
-      document.body.appendChild(tempDiv);
+      const tempElement = document.createElement('div');
+      tempElement.style.position = 'absolute';
+      tempElement.style.left = '-9999px';
+      tempElement.appendChild(receiptClone);
+      document.body.appendChild(tempElement);
 
       // Gambar di footer (kanan bawah nota):
-      const footerDiv = receiptClone.querySelector('.receipt-footer') as HTMLElement;
+      const footerDiv = receiptClone.querySelector('.receipt-footer') as HTMLElement || 
+                        receiptClone.querySelector('div:last-child') as HTMLElement;
+                        
       if (footerDiv) {
         // Hapus semua <img> lama jika ada (antisipasi re-download)
         Array.from(footerDiv.getElementsByTagName("img")).forEach(img => img.remove());
         
-        // Tambahkan gambar baru dengan ukuran 75% dari sebelumnya
+        // Tambahkan gambar baru dengan ukuran yang sesuai
         const img = document.createElement('img');
         img.src = isAlzenaPoint ? '/lovable-uploads/d92af38d-c7a4-482e-9633-55a279c0b29c.png' : '/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png';
         img.alt = storeProfile.storeName;
-        // Kurangi menjadi 75% dari ukuran sebelumnya, dari 216px menjadi 162px
-        img.style.height = "162px"; 
+        img.style.height = isAlzenaPoint ? "140px" : "162px"; 
         img.style.width = "auto";
         img.style.objectFit = "contain";
         img.style.marginLeft = "20px";
-        img.style.maxWidth = "180px"; // Sesuaikan proporsi max width
+        img.style.maxWidth = isAlzenaPoint ? "160px" : "180px";
 
         footerDiv.style.display = 'flex';
         footerDiv.style.justifyContent = 'space-between';
@@ -133,38 +167,37 @@ const TransactionDetailPage: React.FC = () => {
         footerDiv.appendChild(img);
       }
 
-      // Apply Alzena Point styling if needed
+      // Apply receipt-specific styling
       if (isAlzenaPoint) {
-        receiptClone.style.backgroundColor = '#f0f7ff';
+        receiptClone.style.backgroundColor = '#f9f5ff';
+        receiptClone.style.fontFamily = 'Arial, sans-serif';
+        receiptClone.style.color = '#4b5563';
         
-        // Style header text for Alzena Point
+        // Enhance Alzena Point receipt styling for PDF
         const headerTitle = receiptClone.querySelector('.receipt-header div:first-child') as HTMLElement;
         if (headerTitle) {
-          headerTitle.style.color = '#1a56db';
+          headerTitle.style.color = '#7e22ce';
+          headerTitle.style.fontFamily = 'serif';
+          headerTitle.style.fontSize = '22px';
         }
-        
-        // Style total amount for Alzena Point
-        const totalElement = receiptClone.querySelector('.receipt-total div') as HTMLElement;
-        if (totalElement) {
-          totalElement.style.color = '#1a56db';
-        }
+      } else {
+        receiptClone.style.backgroundColor = 'white';
+        receiptClone.style.fontFamily = 'Courier New, monospace';
       }
 
       receiptClone.style.width = '210mm'; // A4 width
       receiptClone.style.padding = '10mm';
-      receiptClone.style.backgroundColor = isAlzenaPoint ? '#f0f7ff' : 'white';
       receiptClone.style.color = 'black';
-      receiptClone.style.fontFamily = 'Arial, sans-serif';
 
       // Generate canvas from the clone
       const canvas = await html2canvas(receiptClone, {
         scale: 2, // Higher scale for better quality
         logging: false,
-        backgroundColor: 'white',
+        backgroundColor: isAlzenaPoint ? '#f9f5ff' : 'white',
       });
 
       // Remove the temporary element
-      document.body.removeChild(tempDiv);
+      document.body.removeChild(tempElement);
 
       // Create PDF
       const pdf = new jsPDF({
@@ -181,8 +214,8 @@ const TransactionDetailPage: React.FC = () => {
       const imgData = canvas.toDataURL('image/png');
       pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
 
-      // Save the PDF
-      pdf.save(`Nota_${transaction.id}.pdf`);
+      // Save the PDF with store-specific naming
+      pdf.save(`Nota_${isAlzenaPoint ? 'AlzenaPoint' : 'AdreenaStore'}_${transaction.id}.pdf`);
       toast.success("PDF berhasil diunduh");
     } catch (error) {
       console.error("Error generating PDF:", error);
