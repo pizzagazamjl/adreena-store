@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
@@ -69,10 +70,10 @@ const TransactionDetailPage: React.FC = () => {
               font-size: ${isAlzenaPoint ? '13px' : '12px'}; 
               margin: 0; 
               padding: 10px; 
-              background-color: ${isAlzenaPoint ? '#ffffff' : '#ffffff'};
+              background-color: #ffffff;
             }
             .receipt-container { 
-              width: ${isAlzenaPoint ? '210mm' : '76mm'}; 
+              width: ${isAlzenaPoint ? '210mm' : '210mm'}; 
               margin: 0 auto; 
               padding: ${isAlzenaPoint ? '15px' : '10px'};
               ${isAlzenaPoint ? 'border: 1px solid #e2e8f0;' : ''}
@@ -91,7 +92,7 @@ const TransactionDetailPage: React.FC = () => {
               margin-top: 8px; 
             }
             .receipt-footer { 
-              text-align: ${isAlzenaPoint ? 'left' : 'center'}; 
+              text-align: ${isAlzenaPoint ? 'left' : 'left'}; 
               margin-top: 15px; 
               font-size: ${isAlzenaPoint ? '11px' : '10px'};
               display: flex; 
@@ -169,23 +170,23 @@ const TransactionDetailPage: React.FC = () => {
       } else {
         receiptClone.style.backgroundColor = 'white';
         receiptClone.style.fontFamily = 'Courier New, monospace';
-        receiptClone.style.width = '76mm'; // Thermal receipt width for Adreena
+        receiptClone.style.width = '210mm'; // Wider width for Adreena (reverted to previous version)
         
         // For Adreena, we need to add the logo to the footer
         const footerDiv = receiptClone.querySelector('.receipt-footer') as HTMLElement;
         if (footerDiv) {
-          // Hapus semua <img> lama jika ada (antisipasi re-download)
+          // Remove any existing images to avoid duplication
           Array.from(footerDiv.getElementsByTagName("img")).forEach(img => img.remove());
           
-          // Tambahkan gambar baru dengan ukuran yang sesuai
+          // Add the logo with appropriate size
           const img = document.createElement('img');
           img.src = '/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png';
           img.alt = storeProfile.storeName;
-          img.style.height = "162px"; 
+          img.style.height = "60px"; 
           img.style.width = "auto";
           img.style.objectFit = "contain";
           img.style.marginLeft = "20px";
-          img.style.maxWidth = "180px";
+          img.style.maxWidth = "120px";
 
           footerDiv.style.display = 'flex';
           footerDiv.style.justifyContent = 'space-between';
@@ -209,15 +210,15 @@ const TransactionDetailPage: React.FC = () => {
 
       // Create PDF
       const pdf = new jsPDF({
-        orientation: isAlzenaPoint ? 'portrait' : 'portrait',
+        orientation: 'portrait',
         unit: 'mm',
-        format: isAlzenaPoint ? 'a4' : [80, 200], // A4 for Alzena, custom for Adreena
+        format: isAlzenaPoint ? 'a4' : 'a4', // A4 for both (reverting Adreena to wider format)
       });
 
       // Calculate dimensions to fit the receipt properly
-      const imgWidth = isAlzenaPoint ? 190 : 70; // slightly less than page width      
-      const imgWidth = isAdreenaStore ? 190 : 70; // slightly less than page width
+      const imgWidth = 190; // slightly less than page width      
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
       // Add image to PDF
       const imgData = canvas.toDataURL('image/png');
       pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);

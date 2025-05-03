@@ -130,75 +130,78 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
           </div>
         </div>
       ) : (
-        // ADREENA STORE RECEIPT DESIGN - Original Simple Format
-        <div className="receipt-container border border-gray-200 rounded-md p-4" id="receipt">
+        // ADREENA STORE RECEIPT DESIGN - Reverting to previous version (wider format)
+        <div className="receipt-container border border-gray-200 rounded-md p-4 w-full" id="receipt">
           <div className="receipt-header text-center mb-4">
             <div className="text-lg font-bold mb-1">{storeProfile.storeName}</div>
             {storeProfile.storeAddress && (
               <div className="text-sm mb-1">{storeProfile.storeAddress}</div>
             )}
             {storeProfile.storePhone && (
-              <div className="text-sm">{storeProfile.storePhone}</div>
+              <div className="text-sm mb-3">{storeProfile.storePhone}</div>
             )}
           </div>
-          <div className="text-sm mb-2">
+          
+          <div className="text-sm mb-4">
             <div className="flex justify-between">
-              <span>No: {transaction.id}</span>
-              <span>{formatTime(transaction.date)}</span>
+              <div>No: {transaction.id}</div>
+              <div>{formatTime(transaction.date)}</div>
             </div>
             <div className="flex justify-between">
-              <span>Tanggal:</span>
-              <span>{formatDate(transaction.date)}</span>
+              <div>Tanggal:</div>
+              <div>{formatDate(transaction.date)}</div>
             </div>
             {transaction.customerName && (
               <div className="flex justify-between">
-                <span>Pembeli:</span>
-                <span>{transaction.customerName}</span>
+                <div>Pembeli:</div>
+                <div>{transaction.customerName}</div>
               </div>
             )}
           </div>
-          <div className="receipt-divider border-t border-dashed my-2"></div>
-          <div className="mb-2">
+          
+          <div className="border-t border-dashed my-2"></div>
+          
+          <div className="mb-4">
             {transaction.items.map((item, index) => (
-              <div key={index} className="text-sm mb-1">
+              <div key={index} className="text-sm mb-2">
                 <div>{item.name}</div>
                 <div className="flex justify-between">
-                  <span>
-                    {item.quantity} x {formatCurrency(item.price)}
-                  </span>
+                  <span>{item.quantity} x {formatCurrency(item.price)}</span>
                   <span>{formatCurrency(item.price * item.quantity)}</span>
                 </div>
+                <div className="border-b border-dotted mt-1"></div>
               </div>
             ))}
           </div>
-          <div className="receipt-divider border-t border-dashed my-2"></div>
-          <div className="receipt-total">
+          
+          <div className="mb-4">
             <div className="flex justify-between text-sm font-bold">
               <span>Total:</span>
               <span>{formatCurrency(transaction.totalAmount)}</span>
             </div>
           </div>
+          
           {transaction.note && (
-            <div className="mt-3 text-sm">
+            <div className="mt-3 text-sm mb-4">
               <span>Catatan: {transaction.note}</span>
             </div>
           )}
-          <div className="receipt-footer text-xs mt-4 flex items-center justify-between">
-            <div style={{ maxWidth: "60%", wordBreak: "break-word" }}>
-              {storeProfile.storeFooter}
+          
+          <div className="receipt-footer flex justify-between items-center mt-4">
+            <div className="text-xs">
+              {storeProfile.storeFooter || "Terima kasih telah berbelanja di Adreena Store"}
             </div>
             <img
               src="/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png"
               alt={storeProfile.storeName}
               style={{
-                height: 108,
+                height: 60,
                 width: "auto",
-                marginLeft: 20,
                 objectFit: "contain",
                 display: "block",
                 maxWidth: 120,
               }}
-              className="inline-block align-middle"
+              className="ml-4"
             />
           </div>
         </div>
