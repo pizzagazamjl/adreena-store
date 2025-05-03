@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
@@ -178,15 +177,15 @@ const TransactionDetailPage: React.FC = () => {
           // Remove any existing images to avoid duplication
           Array.from(footerDiv.getElementsByTagName("img")).forEach(img => img.remove());
           
-          // Add the logo with appropriate size - 300% larger
+          // Add the logo with appropriate size - reduced by 15% from the 300% larger size
           const img = document.createElement('img');
           img.src = '/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png';
           img.alt = storeProfile.storeName;
-          img.style.height = "180px"; // Increased from 60px to 180px (300% larger)
+          img.style.height = "153px"; // Reduced from 180px to 153px (15% smaller)
           img.style.width = "auto";
           img.style.objectFit = "contain";
           img.style.marginLeft = "20px";
-          img.style.maxWidth = "360px"; // Increased from 120px to 360px (300% larger)
+          img.style.maxWidth = "306px"; // Reduced from 360px to 306px (15% smaller)
 
           footerDiv.style.display = 'flex';
           footerDiv.style.justifyContent = 'space-between';

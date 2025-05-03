@@ -195,11 +195,11 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
               src="/lovable-uploads/7c3e6dd6-4c74-4738-a182-0aa8daefc1d9.png"
               alt={storeProfile.storeName}
               style={{
-                height: 180, // Increased from 60 to 180 (300% larger)
+                height: 153, // Reduced from 180 to 153 (15% smaller)
                 width: "auto",
                 objectFit: "contain",
                 display: "block",
-                maxWidth: 360, // Increased from 120 to 360 (300% larger)
+                maxWidth: 306, // Reduced from 360 to 306 (15% smaller)
               }}
               className="ml-4"
             />
