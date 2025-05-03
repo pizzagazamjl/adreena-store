@@ -117,6 +117,16 @@ const TransactionDetailPage: React.FC = () => {
               .terms-title { text-transform: uppercase; font-weight: 500; margin-bottom: 5px; }
               .terms-list { padding-left: 20px; }
               .terms-list li { margin-bottom: 3px; }
+              .logo-container {
+                position: absolute;
+                bottom: 5px;
+                right: 5px;
+              }
+              .logo-image {
+                height: 70px;
+                width: auto;
+                opacity: 0.85;
+              }
             ` : ''}
           </style>
         </head>
@@ -166,6 +176,31 @@ const TransactionDetailPage: React.FC = () => {
         receiptClone.style.fontFamily = 'Arial, sans-serif';
         receiptClone.style.color = '#4b5563';
         receiptClone.style.width = '210mm'; // A4 width for Alzena
+        
+        // Ensure the logo appears in the PDF for Alzena Point
+        const footerDiv = receiptClone.querySelector('.mt-6.pt-4.border-t') as HTMLElement;
+        if (footerDiv) {
+          // Make the footer position relative if it's not already
+          footerDiv.style.position = 'relative';
+          
+          // Remove any existing logo to avoid duplication
+          const existingLogo = footerDiv.querySelector('img[alt="Alzena Point"]');
+          if (existingLogo) existingLogo.remove();
+          
+          // Add the logo with appropriate size and position
+          const img = document.createElement('img');
+          img.src = '/lovable-uploads/0fb223ae-850d-421a-96f9-879ce35fa228.png';
+          img.alt = 'Alzena Point';
+          img.style.height = '70px';
+          img.style.width = 'auto';
+          img.style.position = 'absolute';
+          img.style.bottom = '0';
+          img.style.right = '0';
+          img.style.margin = '5px';
+          img.style.opacity = '0.85';
+          
+          footerDiv.appendChild(img);
+        }
       } else {
         receiptClone.style.backgroundColor = 'white';
         receiptClone.style.fontFamily = 'Courier New, monospace';

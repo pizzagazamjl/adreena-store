@@ -115,7 +115,7 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
             </div>
           )}
           
-          <div className="mt-6 pt-4 border-t border-gray-200 text-xs text-gray-600">
+          <div className="mt-6 pt-4 border-t border-gray-200 text-xs text-gray-600 relative">
             <div>
               <div className="uppercase font-medium mb-1">SYARAT DAN KETENTUAN</div>
               <ol className="list-decimal pl-4 space-y-1">
@@ -127,6 +127,18 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
                 {storeProfile.storeFooter}
               </div>
             </div>
+            {/* Add Alzena Point logo to the bottom right */}
+            <img 
+              src="/lovable-uploads/0fb223ae-850d-421a-96f9-879ce35fa228.png"
+              alt="Alzena Point"
+              className="absolute bottom-0 right-0"
+              style={{
+                height: "70px",
+                width: "auto",
+                marginBottom: "5px",
+                opacity: 0.85
+              }}
+            />
           </div>
         </div>
       ) : (
