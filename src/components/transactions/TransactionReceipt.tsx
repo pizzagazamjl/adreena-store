@@ -127,13 +127,13 @@ const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
                 {storeProfile.storeFooter}
               </div>
             </div>
-            {/* Add Alzena Point logo to the bottom right */}
+            {/* Add Alzena Point logo to the bottom right with 250% size */}
             <img 
-              src="/lovable-uploads/0fb223ae-850d-421a-96f9-879ce35fa228.png"
+              src="/lovable-uploads/fbf25b87-5923-42c4-a574-1fc45fe58e7c.png"
               alt="Alzena Point"
               className="absolute bottom-0 right-0"
               style={{
-                height: "70px",
+                height: "175px", // 70px * 2.5 = 175px (250% of original size)
                 width: "auto",
                 marginBottom: "5px",
                 opacity: 0.85

@@ -189,9 +189,9 @@ const TransactionDetailPage: React.FC = () => {
           
           // Add the logo with appropriate size and position
           const img = document.createElement('img');
-          img.src = '/lovable-uploads/0fb223ae-850d-421a-96f9-879ce35fa228.png';
+          img.src = '/lovable-uploads/fbf25b87-5923-42c4-a574-1fc45fe58e7c.png'; // Updated to new logo
           img.alt = 'Alzena Point';
-          img.style.height = '70px';
+          img.style.height = '175px'; // 70px * 2.5 = 175px (250% of original size)
           img.style.width = 'auto';
           img.style.position = 'absolute';
           img.style.bottom = '0';
